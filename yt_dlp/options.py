@@ -1537,7 +1537,7 @@ def create_parser():
         help='Do not overwrite post-processed files')
     postproc.add_option(
         '--embed-subs',
-        action='store_true', dest='embedsubtitles', default=False,
+        action='store_true', dest='embedsubtitles', default=True,
         help='Embed subtitles in the video (only for mp4, webm and mkv videos)')
     postproc.add_option(
         '--no-embed-subs',
