@@ -142,8 +142,7 @@ class ArteTVIE(ArteTVBaseIE):
             stream_version_code = stream_version['eStat']['ml5']
 
             lang_pref = -1
-            m = self._VERSION_CODE_RE.match(stream_version_code)
-            if m:
+            if m := self._VERSION_CODE_RE.match(stream_version_code):
                 lang_pref = int(''.join('01'[x] for x in (
                     m.group('vlang') == langauge_code,      # we prefer voice in the requested language
                     not m.group('audio_desc'),              # and not the audio description version
@@ -180,9 +179,9 @@ class ArteTVIE(ArteTVBaseIE):
             else:
                 self.report_warning(f'Skipping stream with unknown protocol {stream["protocol"]}')
 
-            # TODO: chapters from stream['segments']?
-            # The JS also looks for chapters in config['data']['attributes']['chapters'],
-            # but I am yet to find a video having those
+                # TODO: chapters from stream['segments']?
+                # The JS also looks for chapters in config['data']['attributes']['chapters'],
+                # but I am yet to find a video having those
 
         formats.extend(secondary_formats)
         self._remove_duplicate_formats(formats)

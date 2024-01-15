@@ -44,7 +44,10 @@ class CBSLocalIE(AnvatoIE):
     def _real_extract(self, url):
         mcp_id = self._match_id(url)
         return self.url_result(
-            'anvato:anvato_cbslocal_app_web_prod_547f3e49241ef0e5d30c79b2efbca5d92c698f67:' + mcp_id, 'Anvato', mcp_id)
+            f'anvato:anvato_cbslocal_app_web_prod_547f3e49241ef0e5d30c79b2efbca5d92c698f67:{mcp_id}',
+            'Anvato',
+            mcp_id,
+        )
 
 
 class CBSLocalArticleIE(AnvatoIE):
@@ -95,8 +98,7 @@ class CBSLocalArticleIE(AnvatoIE):
         display_id = self._match_id(url)
         webpage = self._download_webpage(url, display_id)
 
-        sendtonews_url = SendtoNewsIE._extract_url(webpage)
-        if sendtonews_url:
+        if sendtonews_url := SendtoNewsIE._extract_url(webpage):
             return self.url_result(
                 compat_urlparse.urljoin(url, sendtonews_url),
                 ie=SendtoNewsIE.ie_key())

@@ -47,7 +47,7 @@ def parseOpts(overrideArguments=None, ignore_config_files='if_override'):
         xdg_config_home = os.getenv('XDG_CONFIG_HOME') or compat_expanduser('~/.config')
         userConfFile = os.path.join(xdg_config_home, package_name, 'config')
         if not os.path.isfile(userConfFile):
-            userConfFile = os.path.join(xdg_config_home, '%s.conf' % package_name)
+            userConfFile = os.path.join(xdg_config_home, f'{package_name}.conf')
         userConf = Config.read_file(userConfFile, default=None)
         if userConf is not None:
             return userConf, userConfFile
@@ -64,15 +64,12 @@ def parseOpts(overrideArguments=None, ignore_config_files='if_override'):
             return userConf, userConfFile
 
         # home
-        userConfFile = os.path.join(compat_expanduser('~'), '%s.conf' % package_name)
+        userConfFile = os.path.join(compat_expanduser('~'), f'{package_name}.conf')
         userConf = Config.read_file(userConfFile, default=None)
         if userConf is None:
             userConfFile += '.txt'
             userConf = Config.read_file(userConfFile, default=None)
-        if userConf is not None:
-            return userConf, userConfFile
-
-        return default, None
+        return (userConf, userConfFile) if userConf is not None else (default, None)
 
     def add_config(label, path, user=False):
         """ Adds config and returns whether to continue """
@@ -85,7 +82,7 @@ def parseOpts(overrideArguments=None, ignore_config_files='if_override'):
             if user:
                 args, current_path = _readUserConf(package, default=None)
             else:
-                current_path = os.path.join(path, '%s.conf' % package)
+                current_path = os.path.join(path, f'{package}.conf')
                 args = Config.read_file(current_path, default=None)
             if args is not None:
                 root.append_config(args, current_path, label=label)

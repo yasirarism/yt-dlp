@@ -16,8 +16,7 @@ class CBSBaseIE(ThePlatformFeedIE):
         for k, ext in [('sMPTE-TTCCURL', 'tt'), ('ClosedCaptionURL', 'ttml'), ('webVTTCaptionURL', 'vtt')]:
             cc_e = find_xpath_attr(smil, self._xpath_ns('.//param', namespace), 'name', k)
             if cc_e is not None:
-                cc_url = cc_e.get('value')
-                if cc_url:
+                if cc_url := cc_e.get('value'):
                     subtitles.setdefault(subtitles_lang, []).append({
                         'ext': ext,
                         'url': cc_url,
@@ -34,8 +33,10 @@ class CBSBaseIE(ThePlatformFeedIE):
         for asset_type, query in asset_types.items():
             try:
                 tp_formats, tp_subtitles = self._extract_theplatform_smil(
-                    update_url_query(tp_release_url, query), content_id,
-                    'Downloading %s SMIL data' % asset_type)
+                    update_url_query(tp_release_url, query),
+                    content_id,
+                    f'Downloading {asset_type} SMIL data',
+                )
             except ExtractorError as e:
                 last_e = e
                 if asset_type != 'fallback':
@@ -43,8 +44,10 @@ class CBSBaseIE(ThePlatformFeedIE):
                 query['formats'] = ''  # blank query to check if expired
                 try:
                     tp_formats, tp_subtitles = self._extract_theplatform_smil(
-                        update_url_query(tp_release_url, query), content_id,
-                        'Downloading %s SMIL data, trying again with another format' % asset_type)
+                        update_url_query(tp_release_url, query),
+                        content_id,
+                        f'Downloading {asset_type} SMIL data, trying again with another format',
+                    )
                 except ExtractorError as e:
                     last_e = e
                     continue

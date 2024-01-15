@@ -202,8 +202,7 @@ class Updater:
         """Update yt-dlp executable to the latest version"""
         if not self.check_update():
             return
-        err = is_non_updateable()
-        if err:
+        if err := is_non_updateable():
             return self._report_error(err, True)
         self.ydl.to_screen(f'Updating to version {self.new_version} ...')
 
